@@ -101,6 +101,16 @@ def init_database():
             )
         """)
 
+        # Настройки каждого пользователя
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS user_preferences (
+                user_id BIGINT PRIMARY KEY REFERENCES users(id)
+                    ON DELETE CASCADE,
+                theme TEXT NOT NULL DEFAULT 'dark',
+                updated_at TIMESTAMPTZ NOT NULL
+            )
+        """)
+
         db.execute("""
             DELETE FROM sessions
             WHERE expires_at < %s
@@ -218,6 +228,10 @@ class AuthData(BaseModel):
 
 class EventsData(BaseModel):
     events: list[dict] = Field(max_length=5000)
+
+
+class PreferencesData(BaseModel):
+    theme: str = Field(min_length=4, max_length=5)
 
 
 # ==========================================
@@ -439,6 +453,75 @@ async def save_events(
     return {
         "success": True,
         "count": len(data.events)
+    }
+
+
+# ==========================================
+# ПОЛУЧЕНИЕ НАСТРОЕК ПОЛЬЗОВАТЕЛЯ
+# ==========================================
+
+@app.get("/api/preferences")
+async def get_preferences(request: Request):
+    user = require_user(request)
+
+    with get_db() as db:
+        row = db.execute("""
+            SELECT theme
+            FROM user_preferences
+            WHERE user_id = %s
+        """, (user["id"],)).fetchone()
+
+    if not row:
+        return {
+            "theme": "dark"
+        }
+
+    return {
+        "theme": row["theme"]
+    }
+
+
+# ==========================================
+# СОХРАНЕНИЕ НАСТРОЕК ПОЛЬЗОВАТЕЛЯ
+# ==========================================
+
+@app.put("/api/preferences")
+async def save_preferences(
+    data: PreferencesData,
+    request: Request
+):
+    user = require_user(request)
+
+    if data.theme not in ("light", "dark"):
+        raise HTTPException(
+            status_code=400,
+            detail="Допустимые темы: light или dark."
+        )
+
+    updated_at = datetime.now(timezone.utc)
+
+    with get_db() as db:
+        db.execute("""
+            INSERT INTO user_preferences (
+                user_id,
+                theme,
+                updated_at
+            )
+            VALUES (%s, %s, %s)
+
+            ON CONFLICT(user_id)
+            DO UPDATE SET
+                theme = EXCLUDED.theme,
+                updated_at = EXCLUDED.updated_at
+        """, (
+            user["id"],
+            data.theme,
+            updated_at
+        ))
+
+    return {
+        "success": True,
+        "theme": data.theme
     }
 
 
