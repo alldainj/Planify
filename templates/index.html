@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f6f2">
     <title>Planify — твой умный календарь</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -27,6 +28,7 @@
         <div class="menu-title">НАСТРОЙКИ</div>
         <nav class="side-nav">
             <a href="#" data-page="reminders">◷ Напоминания</a>
+            <a href="#" data-page="settings">⚙ Внешний вид</a>
         </nav>
 
         <div class="sidebar-bottom">
@@ -81,8 +83,6 @@
             <section class="bottom-grid">
                 <div class="panel">
                     <h3>Ближайшие события</h3>
-
-                    <!-- ПОИСК И ФИЛЬТРЫ -->
 
                     <div class="event-filters">
                         <div class="search-field">
@@ -288,6 +288,84 @@
                 <div id="remindersList">
                     <p class="empty">Пока нет напоминаний.</p>
                 </div>
+            </div>
+
+        </section>
+
+        <!-- ВНЕШНИЙ ВИД -->
+
+        <section id="settingsPage" class="page-content hidden-page">
+
+            <div class="page-banner settings-banner">
+                <div>
+                    <span class="welcome-tag">ПЕРСОНАЛИЗАЦИЯ</span>
+                    <h1>Твой <span>Planify.</span></h1>
+                    <p>Настрой внешний вид приложения под себя.</p>
+                </div>
+                <div class="completed-banner-icon">⚙</div>
+            </div>
+
+            <div class="panel appearance-panel">
+                <div class="appearance-heading">
+                    <div>
+                        <h3>Оформление</h3>
+                        <p>Выбери тему, которая тебе больше нравится.</p>
+                    </div>
+                </div>
+
+                <div class="theme-options">
+
+                    <button
+                        type="button"
+                        class="theme-option"
+                        data-theme-choice="light"
+                        aria-pressed="false"
+                    >
+                        <span class="theme-preview theme-preview-light">
+                            <span class="preview-sidebar"></span>
+                            <span class="preview-content">
+                                <span class="preview-line"></span>
+                                <span class="preview-card"></span>
+                                <span class="preview-card"></span>
+                            </span>
+                        </span>
+
+                        <span class="theme-option-info">
+                            <strong>Светлая</strong>
+                            <small>Чистая, лёгкая и спокойная</small>
+                        </span>
+
+                        <span class="theme-check">✓</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="theme-option"
+                        data-theme-choice="dark"
+                        aria-pressed="false"
+                    >
+                        <span class="theme-preview theme-preview-dark">
+                            <span class="preview-sidebar"></span>
+                            <span class="preview-content">
+                                <span class="preview-line"></span>
+                                <span class="preview-card"></span>
+                                <span class="preview-card"></span>
+                            </span>
+                        </span>
+
+                        <span class="theme-option-info">
+                            <strong>Тёмная</strong>
+                            <small>Привычная тёмная атмосфера</small>
+                        </span>
+
+                        <span class="theme-check">✓</span>
+                    </button>
+
+                </div>
+
+                <p class="theme-save-status" id="themeSaveStatus">
+                    Тема будет сохранена в твоём аккаунте.
+                </p>
             </div>
 
         </section>
