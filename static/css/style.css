@@ -1,14 +1,60 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ==========================================
+   1. ОСНОВА И ЦВЕТОВЫЕ ТЕМЫ
+========================================== */
+
 :root {
+    color-scheme: dark;
     --bg: #080D18;
     --panel: #101827;
     --panel2: #17243A;
     --border: #263650;
     --accent: #3478F6;
+    --accent-hover: #5590ff;
+    --accent-soft: #1a2c49;
     --text: #EAF0FF;
     --muted: #8998B3;
+    --input-bg: #080D18;
+    --surface-hover: #1c2b42;
+    --welcome-bg: linear-gradient(120deg, #101d34, #142644 65%, #1b3155);
+    --welcome-border: #294777;
+    --welcome-text: #a2b5d4;
+    --shadow: 0 12px 35px rgba(0, 0, 0, .12);
+
+    --success: #83DDB0;
+    --success-bg: #17352C;
+    --danger: #FF929F;
+    --danger-bg: #30232E;
+    --warning: #F5D17A;
+    --warning-bg: #493C20;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #F7F6F2;
+    --panel: #FFFFFF;
+    --panel2: #F1F0FA;
+    --border: #E8E5E0;
+    --accent: #7055D9;
+    --accent-hover: #5D43C4;
+    --accent-soft: #F0ECFF;
+    --text: #252438;
+    --muted: #858296;
+    --input-bg: #FAF9F7;
+    --surface-hover: #F5F2FF;
+    --welcome-bg: linear-gradient(120deg, #F0ECFF, #F8F1FF 60%, #FFF0E8);
+    --welcome-border: #E5DDFB;
+    --welcome-text: #77718C;
+    --shadow: 0 12px 35px rgba(45, 35, 75, .055);
+
+    --success: #398B68;
+    --success-bg: #EAF7EF;
+    --danger: #C64F65;
+    --danger-bg: #FFF0F1;
+    --warning: #B87535;
+    --warning-bg: #FFF4E5;
 }
 
 * {
@@ -17,13 +63,22 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
+    min-height: 100vh;
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
+    transition: background .25s ease, color .25s ease;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
     font: inherit;
 }
 
@@ -31,12 +86,23 @@ button {
     cursor: pointer;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 .app {
     display: flex;
     min-height: 100vh;
 }
 
-/* БОКОВОЕ МЕНЮ */
+/* ==========================================
+   2. БОКОВОЕ МЕНЮ
+========================================== */
 
 .sidebar {
     width: 250px;
@@ -47,6 +113,7 @@ button {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    transition: background .25s ease, border-color .25s ease;
 }
 
 .logo {
@@ -60,18 +127,20 @@ button {
     color: var(--accent);
 }
 
-.create-btn, .primary-btn {
+.create-btn,
+.primary-btn {
     border: none;
     background: var(--accent);
-    color: white;
+    color: #fff;
     border-radius: 9px;
     padding: 14px;
     font-weight: 700;
-    transition: .2s;
+    transition: .2s ease;
 }
 
-.create-btn:hover, .primary-btn:hover {
-    background: #5590ff;
+.create-btn:hover,
+.primary-btn:hover {
+    background: var(--accent-hover);
     transform: translateY(-2px);
 }
 
@@ -79,7 +148,7 @@ button {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.5px;
-    color: #667895;
+    color: var(--muted);
     margin: 35px 0 13px;
 }
 
@@ -95,13 +164,13 @@ button {
     padding: 12px;
     border-radius: 8px;
     font-size: 13px;
-    transition: .2s;
+    transition: .2s ease;
 }
 
 .side-nav a:hover,
 .side-nav a.active {
-    color: #6fa2ff;
-    background: #1a2c49;
+    color: var(--accent);
+    background: var(--accent-soft);
 }
 
 .sidebar-bottom {
@@ -117,11 +186,12 @@ button {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #2854a0;
+    background: var(--accent);
     display: grid;
     place-items: center;
     color: white;
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .sidebar-bottom strong {
@@ -134,7 +204,9 @@ button {
     font-size: 10px;
 }
 
-/* ОСНОВНАЯ ОБЛАСТЬ */
+/* ==========================================
+   3. ОСНОВНАЯ ОБЛАСТЬ
+========================================== */
 
 .main-content {
     flex: 1;
@@ -149,11 +221,13 @@ button {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 35px;
+    gap: 20px;
 }
 
 .topbar h2 {
     font-size: 23px;
     margin-bottom: 7px;
+    letter-spacing: -.5px;
 }
 
 .topbar p,
@@ -163,11 +237,14 @@ button {
 }
 
 .today-label {
-    color: #6fa2ff;
+    color: var(--accent);
     font-size: 13px;
+    white-space: nowrap;
 }
 
-/* СТРАНИЦЫ */
+/* ==========================================
+   4. СТРАНИЦЫ
+========================================== */
 
 .page-content {
     display: block;
@@ -177,11 +254,13 @@ button {
     display: none !important;
 }
 
-/* ПРИВЕТСТВЕННЫЙ БЛОК */
+/* ==========================================
+   5. ПРИВЕТСТВЕННЫЙ БЛОК
+========================================== */
 
 .welcome {
-    background: linear-gradient(120deg, #101d34, #142644 65%, #1b3155);
-    border: 1px solid #294777;
+    background: var(--welcome-bg);
+    border: 1px solid var(--welcome-border);
     border-radius: 17px;
     padding: 40px;
     display: flex;
@@ -189,10 +268,11 @@ button {
     justify-content: space-between;
     margin-bottom: 40px;
     overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
 .welcome-tag {
-    color: #6fa2ff;
+    color: var(--accent);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -208,23 +288,26 @@ button {
 
 .welcome h1 span,
 .page-banner h1 span {
-    color: #6fa2ff;
+    color: var(--accent);
 }
 
 .welcome p,
 .page-banner p {
-    color: #a2b5d4;
+    color: var(--welcome-text);
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .welcome-icon {
     font-size: 100px;
-    color: #6fa2ff;
+    color: var(--accent);
     opacity: .65;
     padding-right: 25px;
 }
 
-/* КАЛЕНДАРЬ */
+/* ==========================================
+   6. КАЛЕНДАРЬ
+========================================== */
 
 .calendar-section {
     margin-bottom: 35px;
@@ -258,12 +341,14 @@ button {
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--panel);
-    color: #6fa2ff;
+    color: var(--accent);
     font-size: 17px;
+    transition: .2s ease;
 }
 
 .calendar-controls button:hover {
     background: var(--panel2);
+    border-color: var(--accent);
 }
 
 .week-grid {
@@ -289,14 +374,14 @@ button {
 }
 
 .day-card.today {
-    background: #14233c;
+    background: var(--accent-soft);
     border-color: var(--accent);
 }
 
 .day-card.selected {
-    border: 2px solid #3478F6;
-    background: #172B4D;
-    box-shadow: 0 0 15px rgba(52, 120, 246, 0.15);
+    border: 2px solid var(--accent);
+    background: var(--accent-soft);
+    box-shadow: 0 0 15px rgba(112, 85, 217, .12);
 }
 
 .day-name {
@@ -312,7 +397,7 @@ button {
 }
 
 .today .day-number {
-    color: #6fa2ff;
+    color: var(--accent);
 }
 
 .day-dot {
@@ -323,7 +408,9 @@ button {
     border-radius: 50%;
 }
 
-/* ПАНЕЛИ */
+/* ==========================================
+   7. ПАНЕЛИ
+========================================== */
 
 .bottom-grid {
     display: grid;
@@ -337,6 +424,8 @@ button {
     border-radius: 14px;
     padding: 25px;
     min-width: 0;
+    box-shadow: var(--shadow);
+    transition: background .25s ease, border-color .25s ease;
 }
 
 .panel h3 {
@@ -354,7 +443,7 @@ button {
 .modal-content input,
 .modal-content select {
     width: 100%;
-    background: var(--bg);
+    background: var(--input-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 13px;
@@ -378,7 +467,9 @@ button {
     width: 100%;
 }
 
-/* СОБЫТИЯ */
+/* ==========================================
+   8. СОБЫТИЯ
+========================================== */
 
 .event-item {
     padding: 13px;
@@ -421,13 +512,15 @@ button {
     font-size: 15px;
 }
 
-.edit-action {
+.edit-action,
+.undo-action {
     color: #8DB8FF;
     background: #192F50;
     border-color: #294B79;
 }
 
-.edit-action:hover {
+.edit-action:hover,
+.undo-action:hover {
     background: #244B7E;
     border-color: #3478F6;
 }
@@ -454,19 +547,8 @@ button {
     border-color: #3A9569;
 }
 
-.undo-action {
-    color: #A9C8FF;
-    background: #192F50;
-    border-color: #294B79;
-}
-
-.undo-action:hover {
-    background: #244B7E;
-    border-color: #3478F6;
-}
-
 .completed-event {
-    opacity: .65;
+    opacity: .75;
     border-color: #29483F;
     background: #101F20;
 }
@@ -476,7 +558,9 @@ button {
     color: #829B91;
 }
 
-/* СТРАНИЦА ВЫПОЛНЕННЫХ */
+/* ==========================================
+   9. СТРАНИЦА ВЫПОЛНЕННЫХ
+========================================== */
 
 .page-banner {
     background: linear-gradient(120deg, #10251F, #15352F 65%, #1B4238);
@@ -490,18 +574,15 @@ button {
     overflow: hidden;
 }
 
-.page-banner h1 span {
-    color: #83DDB0;
-}
-
-.page-banner .welcome-tag {
+.page-banner h1 span,
+.page-banner .welcome-tag,
+.completed-banner-icon {
     color: #83DDB0;
 }
 
 .completed-banner-icon {
     font-size: 85px;
     font-weight: 800;
-    color: #83DDB0;
     opacity: .7;
     padding-right: 20px;
 }
@@ -521,6 +602,7 @@ button {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--shadow);
 }
 
 .stat-icon {
@@ -529,13 +611,14 @@ button {
     display: grid;
     place-items: center;
     border-radius: 12px;
-    background: #17352C;
-    color: #83DDB0;
+    background: var(--success-bg);
+    color: var(--success);
     font-size: 22px;
     flex-shrink: 0;
 }
 
-.active-stat-icon {
+.active-stat-icon,
+.blue-stat-icon {
     color: #8DB8FF;
     background: #192F50;
 }
@@ -571,21 +654,17 @@ button {
     font-size: 12px;
 }
 
-/* СТРАНИЦА СТАТИСТИКИ */
+/* ==========================================
+   10. СТАТИСТИКА
+========================================== */
 
 .statistics-banner {
     background: linear-gradient(120deg, #101d34, #182D50 65%, #243D68);
     border-color: #34598C;
 }
 
-.statistics-banner .welcome-tag {
-    color: #91B9FF;
-}
-
-.statistics-banner h1 span {
-    color: #91B9FF;
-}
-
+.statistics-banner .welcome-tag,
+.statistics-banner h1 span,
 .statistics-banner .completed-banner-icon {
     color: #91B9FF;
 }
@@ -595,11 +674,6 @@ button {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 15px;
     margin-bottom: 20px;
-}
-
-.blue-stat-icon {
-    color: #8DB8FF;
-    background: #192F50;
 }
 
 .purple-stat-icon {
@@ -630,13 +704,13 @@ button {
 
 .statistics-heading > strong {
     font-size: 22px;
-    color: #83DDB0;
+    color: var(--success);
 }
 
 .progress-track {
     width: 100%;
     height: 12px;
-    background: #202D42;
+    background: var(--panel2);
     border-radius: 20px;
     overflow: hidden;
 }
@@ -644,7 +718,7 @@ button {
 .progress-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #3478F6, #83DDB0);
+    background: linear-gradient(90deg, var(--accent), #83DDB0);
     border-radius: 20px;
     transition: width .5s ease;
 }
@@ -667,8 +741,8 @@ button {
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    background: #192F50;
-    color: #8DB8FF;
+    background: var(--accent-soft);
+    color: var(--accent);
     font-size: 19px;
     margin-bottom: 15px;
 }
@@ -680,7 +754,7 @@ button {
 .period-card > strong {
     display: block;
     font-size: 35px;
-    color: #8DB8FF;
+    color: var(--accent);
     margin-bottom: 5px;
 }
 
@@ -713,7 +787,7 @@ button {
 }
 
 .chart-value {
-    color: #A9C8FF;
+    color: var(--accent);
     font-size: 12px;
     font-weight: 700;
 }
@@ -725,7 +799,7 @@ button {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    background: #17243A;
+    background: var(--panel2);
     border-radius: 8px 8px 4px 4px;
     overflow: hidden;
 }
@@ -733,7 +807,7 @@ button {
 .chart-bar {
     width: 100%;
     min-height: 0;
-    background: linear-gradient(180deg, #6FA2FF, #3478F6);
+    background: linear-gradient(180deg, #6FA2FF, var(--accent));
     border-radius: 8px 8px 4px 4px;
     transition: height .4s ease;
 }
@@ -743,16 +817,18 @@ button {
     font-size: 11px;
 }
 
-/* НАПОМИНАНИЯ */
+/* ==========================================
+   11. НАПОМИНАНИЯ
+========================================== */
 
 #eventReminder {
     width: 100%;
     padding: 13px 15px;
     margin: 8px 0 16px;
-    border: 1px solid #263D5D;
+    border: 1px solid var(--border);
     border-radius: 11px;
-    background: #111E32;
-    color: #EAF0FF;
+    background: var(--input-bg);
+    color: var(--text);
     font-size: 14px;
     outline: none;
     cursor: pointer;
@@ -761,16 +837,18 @@ button {
 
 #eventReminder:hover,
 #eventReminder:focus {
-    border-color: #3478F6;
-    background: #17243A;
+    border-color: var(--accent);
+    background: var(--panel2);
 }
 
 #eventReminder option {
-    background: #101827;
-    color: #EAF0FF;
+    background: var(--panel);
+    color: var(--text);
 }
 
-/* МОДАЛЬНОЕ ОКНО */
+/* ==========================================
+   12. МОДАЛЬНОЕ ОКНО
+========================================== */
 
 .modal {
     position: fixed;
@@ -779,7 +857,7 @@ button {
     display: grid;
     place-items: center;
     padding: 20px;
-    z-index: 10;
+    z-index: 100;
 }
 
 .modal.hidden {
@@ -790,10 +868,13 @@ button {
     position: relative;
     width: 100%;
     max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 30px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 16px;
+    box-shadow: var(--shadow);
 }
 
 .modal-content h2 {
@@ -833,11 +914,554 @@ button {
     font-size: 27px;
 }
 
-/* АДАПТАЦИЯ */
+/* ==========================================
+   13. ПОИСК И ФИЛЬТРЫ
+========================================== */
+
+.event-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 13px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    transition: .2s ease;
+}
+
+.search-field:focus-within {
+    border-color: var(--accent);
+}
+
+.search-field span {
+    color: var(--accent);
+    font-size: 22px;
+}
+
+.search-field input {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.search-field input::placeholder {
+    color: var(--muted);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+.filter-row input,
+.filter-row select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    outline: none;
+    font-size: 12px;
+}
+
+.filter-row input:focus,
+.filter-row select:focus {
+    border-color: var(--accent);
+}
+
+.filter-row select option {
+    background: var(--panel);
+    color: var(--text);
+}
+
+.reset-filters-btn {
+    align-self: flex-start;
+    padding: 8px 12px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    transition: .2s ease;
+}
+
+.reset-filters-btn:hover {
+    background: var(--panel2);
+    border-color: var(--accent);
+}
+
+/* ==========================================
+   14. КАТЕГОРИИ И ПРИОРИТЕТЫ
+========================================== */
+
+.event-category,
+.event-priority {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 8px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.category-study {
+    background: #192F50;
+    color: #A9C8FF;
+}
+
+.category-work {
+    background: #30264A;
+    color: #C2A5FF;
+}
+
+.category-sport {
+    background: #17352C;
+    color: #83DDB0;
+}
+
+.category-personal {
+    background: #3A2C24;
+    color: #F0BC91;
+}
+
+.category-other {
+    background: #263044;
+    color: #B6C1D5;
+}
+
+.priority-high {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.priority-medium {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.priority-low {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+/* ==========================================
+   15. ВНЕШНИЙ ВИД — НАСТРОЙКИ ТЕМЫ
+========================================== */
+
+#settingsPage {
+    animation: settingsAppear .25s ease;
+}
+
+@keyframes settingsAppear {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-banner {
+    background: linear-gradient(120deg, #272044, #34285A 65%, #49366B);
+    border-color: #57447D;
+}
+
+.settings-banner .welcome-tag,
+.settings-banner h1 span,
+.settings-banner .completed-banner-icon {
+    color: #C2A5FF;
+}
+
+#settingsPage .appearance-panel {
+    max-width: 900px;
+    padding: 30px;
+}
+
+.appearance-heading {
+    margin-bottom: 23px;
+}
+
+.appearance-heading h3 {
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+.appearance-heading p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.theme-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    width: 100%;
+    min-width: 0;
+    padding: 13px;
+    text-align: left;
+    color: var(--text);
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.theme-option:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+    transform: translateY(-2px);
+}
+
+.theme-option[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.theme-preview {
+    display: flex;
+    width: 100%;
+    height: 125px;
+    overflow: hidden;
+    border-radius: 9px;
+    border: 1px solid rgba(120, 120, 140, .2);
+}
+
+.theme-preview-light {
+    background: #F7F6F2;
+}
+
+.theme-preview-dark {
+    background: #080D18;
+}
+
+.preview-sidebar {
+    display: block;
+    width: 24%;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.theme-preview-light .preview-sidebar {
+    background: #FFFFFF;
+    border-right: 1px solid #E8E5E0;
+}
+
+.theme-preview-dark .preview-sidebar {
+    background: #101827;
+    border-right: 1px solid #263650;
+}
+
+.preview-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 9px;
+    padding: 13px;
+}
+
+.preview-line {
+    display: block;
+    width: 55%;
+    height: 9px;
+    border-radius: 5px;
+}
+
+.theme-preview-light .preview-line {
+    background: #7055D9;
+}
+
+.theme-preview-dark .preview-line {
+    background: #3478F6;
+}
+
+.preview-card {
+    display: block;
+    width: 100%;
+    height: 28px;
+    border-radius: 5px;
+}
+
+.theme-preview-light .preview-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E5E0;
+}
+
+.theme-preview-dark .preview-card {
+    background: #17243A;
+    border: 1px solid #263650;
+}
+
+.theme-option-info {
+    display: block;
+    padding: 0 3px 3px;
+}
+
+.theme-option-info strong {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.theme-option-info small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.theme-check {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: grid;
+    place-items: center;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: transparent;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.theme-option[aria-pressed="true"] .theme-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.theme-save-status,
+#themeSaveStatus {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.theme-option::after {
+    content: none;
+}
+
+/* ==========================================
+   16. СВЕТЛАЯ ТЕМА — ДОПОЛНИТЕЛЬНЫЕ ЦВЕТА
+========================================== */
+
+:root[data-theme="light"] .page-banner {
+    background: linear-gradient(120deg, #EAF7F0, #F0F8F4 65%, #E8F5F0);
+    border-color: #D5EBDD;
+}
+
+:root[data-theme="light"] .page-banner h1 span,
+:root[data-theme="light"] .page-banner .welcome-tag,
+:root[data-theme="light"] .completed-banner-icon {
+    color: #398B68;
+}
+
+:root[data-theme="light"] .statistics-banner {
+    background: linear-gradient(120deg, #EEF0FF, #F2EEFF 65%, #EAEAFF);
+    border-color: #DFDDF8;
+}
+
+:root[data-theme="light"] .statistics-banner .welcome-tag,
+:root[data-theme="light"] .statistics-banner h1 span,
+:root[data-theme="light"] .statistics-banner .completed-banner-icon {
+    color: #7055D9;
+}
+
+:root[data-theme="light"] .settings-banner {
+    background: linear-gradient(120deg, #F0ECFF, #F7F1FF 65%, #FFF0E8);
+    border-color: #E5DDFB;
+}
+
+:root[data-theme="light"] .settings-banner .welcome-tag,
+:root[data-theme="light"] .settings-banner h1 span,
+:root[data-theme="light"] .settings-banner .completed-banner-icon {
+    color: #7055D9;
+}
+
+:root[data-theme="light"] .completed-event {
+    background: #F0F7F2;
+    border-color: #D5EBDD;
+}
+
+:root[data-theme="light"] .completed-title {
+    color: #779487;
+}
+
+:root[data-theme="light"] .edit-action,
+:root[data-theme="light"] .undo-action {
+    color: #526BC0;
+    background: #EEF0FF;
+    border-color: #DCE1FA;
+}
+
+:root[data-theme="light"] .edit-action:hover,
+:root[data-theme="light"] .undo-action:hover {
+    background: #E1E5FF;
+    border-color: #AEB9F2;
+}
+
+:root[data-theme="light"] .delete-action {
+    color: #C64F65;
+    background: #FFF0F1;
+    border-color: #F5D9DE;
+}
+
+:root[data-theme="light"] .delete-action:hover {
+    background: #FFE3E7;
+    border-color: #E9B8C2;
+}
+
+:root[data-theme="light"] .complete-action {
+    color: #34825F;
+    background: #EAF7EF;
+    border-color: #D1EBDD;
+}
+
+:root[data-theme="light"] .complete-action:hover {
+    background: #DDF2E5;
+    border-color: #A9D9BD;
+}
+
+:root[data-theme="light"] .stat-icon {
+    background: #EAF7EF;
+    color: #398B68;
+}
+
+:root[data-theme="light"] .active-stat-icon,
+:root[data-theme="light"] .blue-stat-icon {
+    background: #EEF0FF;
+    color: #526BC0;
+}
+
+:root[data-theme="light"] .purple-stat-icon {
+    background: #F2ECFF;
+    color: #8864C9;
+}
+
+:root[data-theme="light"] .statistics-heading > strong {
+    color: #398B68;
+}
+
+:root[data-theme="light"] .progress-fill {
+    background: linear-gradient(90deg, #7055D9, #65B995);
+}
+
+:root[data-theme="light"] .category-study {
+    background: #EEF0FF;
+    color: #526BC0;
+}
+
+:root[data-theme="light"] .category-work {
+    background: #F2ECFF;
+    color: #8864C9;
+}
+
+:root[data-theme="light"] .category-sport {
+    background: #EAF7EF;
+    color: #398B68;
+}
+
+:root[data-theme="light"] .category-personal {
+    background: #FFF1E8;
+    color: #B87548;
+}
+
+:root[data-theme="light"] .category-other {
+    background: #F0F0F2;
+    color: #777785;
+}
+
+:root[data-theme="light"] .priority-high {
+    background: #FFF0F1;
+    color: #C64F65;
+}
+
+:root[data-theme="light"] .priority-medium {
+    background: #FFF4E5;
+    color: #B87535;
+}
+
+:root[data-theme="light"] .priority-low {
+    background: #EAF7EF;
+    color: #398B68;
+}
+
+:root[data-theme="light"] #planifyLogout {
+    background: #FFF0F1;
+    border-color: #F5D9DE;
+    color: #C64F65;
+}
+
+:root[data-theme="light"] #planifyLogout:hover {
+    background: #FFE3E7;
+}
+
+/* ==========================================
+   17. ПОЛЯ И ВЫПАДАЮЩИЕ СПИСКИ
+========================================== */
+
+input,
+textarea,
+select {
+    color-scheme: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--muted);
+    opacity: .8;
+}
+
+select option {
+    background: var(--panel);
+    color: var(--text);
+}
+
+/* ==========================================
+   18. АДАПТАЦИЯ ПОД ЭКРАНЫ
+========================================== */
 
 @media (max-width: 1100px) {
     .statistics-cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .main-content {
+        padding-left: 3%;
+        padding-right: 3%;
     }
 }
 
@@ -846,12 +1470,16 @@ button {
         width: 190px;
     }
 
+    .bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
     .main-content {
         padding: 25px 3%;
     }
 
-    .bottom-grid {
-        grid-template-columns: 1fr;
+    .theme-options {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -887,6 +1515,23 @@ button {
 
     .create-btn {
         margin-bottom: 12px;
+    }
+
+    .main-content {
+        padding: 20px 15px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+
+    .topbar h2 {
+        font-size: 20px;
+    }
+
+    .today-label {
+        font-size: 11px;
     }
 
     .welcome,
@@ -933,137 +1578,38 @@ button {
     .chart-label {
         font-size: 9px;
     }
-}
 
-/* ПОИСК И ФИЛЬТРЫ */
-
-.event-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.search-field {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 13px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    transition: .2s ease;
-}
-
-.search-field:focus-within {
-    border-color: var(--accent);
-}
-
-.search-field span {
-    color: #6fa2ff;
-    font-size: 22px;
-}
-
-.search-field input {
-    width: 100%;
-    min-width: 0;
-    padding: 13px 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--text);
-    font-size: 13px;
-}
-
-.search-field input::placeholder {
-    color: var(--muted);
-}
-
-.filter-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-}
-
-.filter-row input,
-.filter-row select {
-    width: 100%;
-    min-width: 0;
-    padding: 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    color: var(--text);
-    outline: none;
-    font-size: 12px;
-}
-
-.filter-row input:focus,
-.filter-row select:focus {
-    border-color: var(--accent);
-}
-
-.filter-row select option {
-    background: var(--panel);
-    color: var(--text);
-}
-
-.reset-filters-btn {
-    align-self: flex-start;
-    padding: 8px 12px;
-    background: #192F50;
-    border: 1px solid #294B79;
-    border-radius: 8px;
-    color: #A9C8FF;
-    font-size: 11px;
-    font-weight: 600;
-    transition: .2s ease;
-}
-
-.reset-filters-btn:hover {
-    background: #244B7E;
-    border-color: var(--accent);
-}
-
-.event-category {
-    display: inline-flex;
-    align-items: center;
-    margin-top: 8px;
-    padding: 5px 9px;
-    border-radius: 20px;
-    background: #192F50;
-    color: #A9C8FF;
-    font-size: 10px;
-    font-weight: 600;
-}
-
-.category-study {
-    background: #192F50;
-    color: #A9C8FF;
-}
-
-.category-work {
-    background: #30264A;
-    color: #C2A5FF;
-}
-
-.category-sport {
-    background: #17352C;
-    color: #83DDB0;
-}
-
-.category-personal {
-    background: #3A2C24;
-    color: #F0BC91;
-}
-
-.category-other {
-    background: #263044;
-    color: #B6C1D5;
-}
-
-@media (max-width: 600px) {
     .filter-row {
         grid-template-columns: 1fr;
+    }
+
+    .theme-options {
+        grid-template-columns: 1fr;
+    }
+
+    #settingsPage .appearance-panel {
+        padding: 18px;
+    }
+
+    .theme-preview {
+        height: 115px;
+    }
+
+    .theme-option {
+        padding: 12px;
+    }
+
+    .modal-content {
+        padding: 23px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
     }
 }
