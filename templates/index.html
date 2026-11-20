@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planify — твой умный календарь</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="logo">Planify<span>.</span></div>
+
+        <button class="create-btn" id="openModal">+ Создать событие</button>
+
+        <div class="menu-title">МЕНЮ</div>
+        <nav class="side-nav">
+            <a href="#" class="active" data-page="overview">▦ Обзор</a>
+            <a href="#" data-page="calendar">▣ Мой календарь</a>
+            <a href="#" data-page="completed">✓ Выполненные</a>
+            <a href="#" data-page="statistics">▥ Статистика</a>
+        </nav>
+
+        <div class="menu-title">НАСТРОЙКИ</div>
+        <nav class="side-nav">
+            <a href="#" data-page="reminders">◷ Напоминания</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="avatar">P</div>
+            <div>
+                <strong>Мой профиль</strong>
+                <small>Личный календарь</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h2 id="pageTitle">Мой календарь</h2>
+                <p id="pageSubtitle">Планируй своё время с умом</p>
+            </div>
+            <div class="top-actions">
+                <span class="today-label" id="todayLabel"></span>
+            </div>
+        </header>
+
+        <!-- ОБЗОР -->
+
+        <div id="overviewPage" class="page-content">
+
+            <section class="welcome">
+                <div>
+                    <span class="welcome-tag">ТВОЁ ВРЕМЯ — ТВОИ ПРАВИЛА</span>
+                    <h1>Всё успеть.<br><span>Без лишнего хаоса.</span></h1>
+                    <p>Все твои планы, задачи и события в одном месте.</p>
+                </div>
+                <div class="welcome-icon">✦</div>
+            </section>
+
+            <section class="calendar-section" id="calendarSection">
+                <div class="section-heading">
+                    <div>
+                        <h2>Расписание</h2>
+                        <p id="monthLabel"></p>
+                    </div>
+                    <div class="calendar-controls">
+                        <button id="prevWeek">←</button>
+                        <button id="nextWeek">→</button>
+                    </div>
+                </div>
+
+                <div class="week-grid" id="weekGrid"></div>
+            </section>
+
+            <section class="bottom-grid">
+                <div class="panel">
+                    <h3>Ближайшие события</h3>
+
+                    <!-- ПОИСК И ФИЛЬТРЫ -->
+
+                    <div class="event-filters">
+                        <div class="search-field">
+                            <span>⌕</span>
+                            <input
+                                type="search"
+                                id="searchEvents"
+                                placeholder="Поиск по названию..."
+                            >
+                        </div>
+
+                        <div class="filter-row">
+                            <input
+                                type="date"
+                                id="filterDate"
+                                aria-label="Фильтр по дате"
+                            >
+
+                            <select id="filterCategory" aria-label="Фильтр по категории">
+                                <option value="">Все категории</option>
+                                <option value="Учёба">Учёба</option>
+                                <option value="Работа">Работа</option>
+                                <option value="Спорт">Спорт</option>
+                                <option value="Личное">Личное</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+
+                        <button class="reset-filters-btn" id="resetFilters">
+                            Сбросить фильтры
+                        </button>
+                    </div>
+
+                    <div id="eventList">
+                        <p class="empty">Пока нет событий. Создай первое!</p>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h3>Быстрое добавление</h3>
+                    <p class="panel-description">Опиши свой план обычным текстом.</p>
+                    <textarea id="quickInput" placeholder="Например: завтра в 15:00 встреча..."></textarea>
+                    <button class="primary-btn" id="quickAdd">Добавить событие</button>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ВЫПОЛНЕННЫЕ -->
+
+        <section id="completedPage" class="page-content hidden-page">
+
+            <div class="page-banner">
+                <div>
+                    <span class="welcome-tag">ТВОИ ДОСТИЖЕНИЯ</span>
+                    <h1>Выполненные <span>дела.</span></h1>
+                    <p>Здесь собраны все мероприятия, которые ты завершил.</p>
+                </div>
+                <div class="completed-banner-icon">✓</div>
+            </div>
+
+            <div class="completed-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">✓</span>
+                    <div>
+                        <strong id="completedCount">0</strong>
+                        <small>Выполнено мероприятий</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon active-stat-icon">◷</span>
+                    <div>
+                        <strong id="activeCount">0</strong>
+                        <small>Активных мероприятий</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel completed-panel">
+                <div class="completed-heading">
+                    <div>
+                        <h3>История выполненных дел</h3>
+                        <p>Завершённые мероприятия находятся здесь.</p>
+                    </div>
+                </div>
+                <div id="completedList">
+                    <p class="empty">Пока нет выполненных мероприятий.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- СТАТИСТИКА -->
+
+        <section id="statisticsPage" class="page-content hidden-page">
+
+            <div class="page-banner statistics-banner">
+                <div>
+                    <span class="welcome-tag">ТВОЙ ПРОГРЕСС</span>
+                    <h1>Статистика <span>Planify.</span></h1>
+                    <p>Следи за своими результатами и достижениями.</p>
+                </div>
+                <div class="completed-banner-icon">▥</div>
+            </div>
+
+            <div class="statistics-cards">
+
+                <div class="stat-card">
+                    <span class="stat-icon blue-stat-icon">▦</span>
+                    <div>
+                        <strong id="totalStats">0</strong>
+                        <small>Всего мероприятий</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">✓</span>
+                    <div>
+                        <strong id="doneStats">0</strong>
+                        <small>Выполнено</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon active-stat-icon">◷</span>
+                    <div>
+                        <strong id="pendingStats">0</strong>
+                        <small>Активных</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon purple-stat-icon">%</span>
+                    <div>
+                        <strong id="completionRate">0%</strong>
+                        <small>Процент выполнения</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel progress-panel">
+                <div class="statistics-heading">
+                    <div>
+                        <h3>Общий прогресс</h3>
+                        <p>Доля выполненных мероприятий от общего количества.</p>
+                    </div>
+                    <strong id="progressLabel">0%</strong>
+                </div>
+
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="statistics-periods">
+
+                <div class="panel period-card">
+                    <span class="period-icon">▦</span>
+                    <h3>За эту неделю</h3>
+                    <strong id="weekStats">0</strong>
+                    <p>выполненных мероприятий</p>
+                </div>
+
+                <div class="panel period-card">
+                    <span class="period-icon">▣</span>
+                    <h3>За этот месяц</h3>
+                    <strong id="monthStats">0</strong>
+                    <p>выполненных мероприятий</p>
+                </div>
+
+            </div>
+
+            <div class="panel chart-panel">
+                <div class="statistics-heading">
+                    <div>
+                        <h3>Активность за 7 дней</h3>
+                        <p>Количество завершённых мероприятий по дням.</p>
+                    </div>
+                </div>
+
+                <div id="activityChart" class="activity-chart"></div>
+            </div>
+
+        </section>
+
+        <!-- НАПОМИНАНИЯ -->
+
+        <section id="remindersPage" class="page-content hidden-page">
+
+            <div class="page-banner">
+                <div>
+                    <span class="welcome-tag">НЕ ЗАБУДЬ ВАЖНОЕ</span>
+                    <h1>Твои <span>напоминания.</span></h1>
+                    <p>Все активные события с настроенными напоминаниями.</p>
+                </div>
+                <div class="completed-banner-icon">◷</div>
+            </div>
+
+            <div class="panel">
+                <h3>Активные напоминания</h3>
+                <div id="remindersList">
+                    <p class="empty">Пока нет напоминаний.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- ОКНО СОЗДАНИЯ СОБЫТИЯ -->
+
+<div class="modal hidden" id="eventModal">
+    <div class="modal-content">
+
+        <button class="close-btn" id="closeModal">×</button>
+
+        <h2>Новое событие</h2>
+        <p>Добавь событие в свой календарь.</p>
+
+        <label for="eventTitle">Название</label>
+        <input id="eventTitle" type="text" placeholder="Например: Учёба">
+
+        <label for="eventDate">Дата</label>
+        <input id="eventDate" type="date">
+
+        <label for="eventTime">Время</label>
+        <input id="eventTime" type="time">
+
+        <label for="eventCategory">Категория</label>
+        <select id="eventCategory">
+            <option value="Учёба">Учёба</option>
+            <option value="Работа">Работа</option>
+            <option value="Спорт">Спорт</option>
+            <option value="Личное">Личное</option>
+            <option value="Другое" selected>Другое</option>
+        </select>
+
+        <label for="eventReminder">Напомнить заранее</label>
+        <select id="eventReminder">
+            <option value="0">Без напоминания</option>
+            <option value="5">За 5 минут</option>
+            <option value="15" selected>За 15 минут</option>
+            <option value="30">За 30 минут</option>
+            <option value="60">За 1 час</option>
+            <option value="1440">За 1 день</option>
+        </select>
+
+        <button class="primary-btn" id="saveEvent">Сохранить событие</button>
+
+    </div>
+</div>
+
+<script src="/static/js/script.js"></script>
+</body>
+</html>

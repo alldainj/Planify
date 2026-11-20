@@ -1,0 +1,7 @@
+
+fastapi
+uvicorn[standard]
+jinja2
+aiogram==3.33.0
+psycopg[binary]>=3.2,<4
+python-dotenv>=1,<2
