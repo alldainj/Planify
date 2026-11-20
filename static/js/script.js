@@ -27,6 +27,7 @@ const overviewPage = document.getElementById("overviewPage");
 const completedPage = document.getElementById("completedPage");
 const statisticsPage = document.getElementById("statisticsPage");
 const remindersPage = document.getElementById("remindersPage");
+const settingsPage = document.getElementById("settingsPage");
 
 const pageTitle = document.getElementById("pageTitle");
 const pageSubtitle = document.getElementById("pageSubtitle");
@@ -56,7 +57,6 @@ const priorityOptions = [
     { value: "low", label: "🟢 Низкий" }
 ];
 
-// Добавляем выбор приоритета в окно мероприятия
 const priorityField = document.createElement("div");
 priorityField.className = "priority-field";
 
@@ -77,12 +77,13 @@ eventPriority.value = "medium";
 
 priorityField.append(priorityLabel, eventPriority);
 
-eventCategory.parentElement.insertAdjacentElement(
-    "afterend",
-    priorityField
-);
+if (eventCategory && eventCategory.parentElement) {
+    eventCategory.parentElement.insertAdjacentElement(
+        "afterend",
+        priorityField
+    );
+}
 
-// Стили приоритета
 const priorityStyles = document.createElement("style");
 
 priorityStyles.textContent = `
@@ -148,7 +149,10 @@ priorityStyles.textContent = `
 
 document.head.append(priorityStyles);
 
-// Миграция старых событий
+// ==========================================
+// МИГРАЦИЯ И СОХРАНЕНИЕ СОБЫТИЙ
+// ==========================================
+
 events.forEach(event => {
     if (!event.id) event.id = createId();
     if (event.reminder === undefined) event.reminder = 15;
@@ -158,7 +162,6 @@ events.forEach(event => {
     if (!event.priority) event.priority = "medium";
 });
 
-// Сохранение событий
 function saveEvents() {
     localStorage.setItem(
         "planifyEvents",
@@ -168,13 +171,11 @@ function saveEvents() {
 
 saveEvents();
 
-// Создание ID
 function createId() {
     return Date.now().toString(36) +
         Math.random().toString(36).slice(2);
 }
 
-// Форматирование даты
 function dateKey(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -193,7 +194,10 @@ const months = [
     "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
 ];
 
-// Определение категории по названию
+// ==========================================
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// ==========================================
+
 function detectCategory(title) {
     const text = title.toLowerCase();
 
@@ -216,7 +220,6 @@ function detectCategory(title) {
     return "Другое";
 }
 
-// Форматирование напоминания
 function formatReminder(minutes) {
     minutes = Number(minutes);
 
@@ -226,7 +229,6 @@ function formatReminder(minutes) {
     return `${minutes} мин.`;
 }
 
-// Форматирование даты
 function formatDate(dateString) {
     const date = new Date(dateString + "T12:00:00");
 
@@ -237,12 +239,10 @@ function formatDate(dateString) {
     });
 }
 
-// Дата выполнения события
 function getCompletionDate(event) {
     return event.completedAt || event.date;
 }
 
-// CSS-класс категории
 function getCategoryClass(category) {
     const classes = {
         "Учёба": "category-study",
@@ -255,7 +255,6 @@ function getCategoryClass(category) {
     return classes[category] || "category-other";
 }
 
-// Создание метки категории
 function createCategoryBadge(category) {
     const badge = document.createElement("span");
 
@@ -267,7 +266,6 @@ function createCategoryBadge(category) {
     return badge;
 }
 
-// Название приоритета
 function getPriorityLabel(priority) {
     const labels = {
         high: "🔴 Высокий приоритет",
@@ -278,7 +276,6 @@ function getPriorityLabel(priority) {
     return labels[priority] || labels.medium;
 }
 
-// CSS-класс приоритета
 function getPriorityClass(priority) {
     const classes = {
         high: "priority-high",
@@ -289,7 +286,6 @@ function getPriorityClass(priority) {
     return classes[priority] || "priority-medium";
 }
 
-// Создание метки приоритета
 function createPriorityBadge(priority) {
     const badge = document.createElement("span");
 
@@ -301,7 +297,6 @@ function createPriorityBadge(priority) {
     return badge;
 }
 
-// Сортировка по приоритету
 function sortByPriority(a, b) {
     const priorityOrder = {
         high: 1,
@@ -321,7 +316,10 @@ function sortByPriority(a, b) {
     return dateCompare || a.time.localeCompare(b.time);
 }
 
-// Запрос разрешения на уведомления
+// ==========================================
+// УВЕДОМЛЕНИЯ
+// ==========================================
+
 async function requestNotificationPermission() {
     if (!("Notification" in window)) {
         alert("Браузер не поддерживает уведомления.");
@@ -342,14 +340,24 @@ async function requestNotificationPermission() {
     return permission === "granted";
 }
 
-// Переключение страниц
+// ==========================================
+// НАВИГАЦИЯ
+// ==========================================
+
 function showPage(page) {
     currentPage = page;
 
-    overviewPage.classList.add("hidden-page");
-    completedPage.classList.add("hidden-page");
-    statisticsPage.classList.add("hidden-page");
-    remindersPage.classList.add("hidden-page");
+    [
+        overviewPage,
+        completedPage,
+        statisticsPage,
+        remindersPage,
+        settingsPage
+    ].forEach(element => {
+        if (element) {
+            element.classList.add("hidden-page");
+        }
+    });
 
     document.querySelectorAll(".side-nav a").forEach(link => {
         link.classList.remove("active");
@@ -364,15 +372,23 @@ function showPage(page) {
     }
 
     if (page === "overview" || page === "calendar") {
-        overviewPage.classList.remove("hidden-page");
+        if (overviewPage) {
+            overviewPage.classList.remove("hidden-page");
+        }
 
         pageTitle.textContent = "Мой календарь";
         pageSubtitle.textContent = "Планируй своё время с умом";
 
         if (page === "calendar") {
             setTimeout(() => {
-                document.getElementById("calendarSection")
-                    .scrollIntoView({ behavior: "smooth" });
+                const calendarSection =
+                    document.getElementById("calendarSection");
+
+                if (calendarSection) {
+                    calendarSection.scrollIntoView({
+                        behavior: "smooth"
+                    });
+                }
             }, 50);
         }
     }
@@ -404,13 +420,27 @@ function showPage(page) {
         renderReminders();
     }
 
-    document.querySelector(".main-content").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    if (page === "settings") {
+        if (settingsPage) {
+            settingsPage.classList.remove("hidden-page");
+        }
+
+        pageTitle.textContent = "Внешний вид";
+        pageSubtitle.textContent = "Настрой Planify под себя";
+
+        updateThemeButtons();
+    }
+
+    const mainContent = document.querySelector(".main-content");
+
+    if (mainContent) {
+        mainContent.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 
-// Обработчики меню
 document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
     link.addEventListener("click", event => {
         event.preventDefault();
@@ -418,7 +448,10 @@ document.querySelectorAll(".side-nav a[data-page]").forEach(link => {
     });
 });
 
-// Получение понедельника
+// ==========================================
+// КАЛЕНДАРЬ
+// ==========================================
+
 function getMonday(date) {
     const result = new Date(date);
     result.setHours(0, 0, 0, 0);
@@ -430,7 +463,6 @@ function getMonday(date) {
     return result;
 }
 
-// Отрисовка календаря
 function renderCalendar() {
     weekGrid.innerHTML = "";
 
@@ -489,7 +521,10 @@ function renderCalendar() {
     renderEvents();
 }
 
-// Создание кнопки действия
+// ==========================================
+// СОБЫТИЯ И ФИЛЬТРЫ
+// ==========================================
+
 function createActionButton(className, html, callback) {
     const button = document.createElement("button");
 
@@ -501,7 +536,6 @@ function createActionButton(className, html, callback) {
     return button;
 }
 
-// Проверка, включены ли фильтры
 function hasActiveFilters() {
     return Boolean(
         searchEvents.value.trim() ||
@@ -510,7 +544,6 @@ function hasActiveFilters() {
     );
 }
 
-// Применение фильтров
 function getFilteredEvents() {
     const search = searchEvents.value.trim().toLowerCase();
     const date = filterDate.value;
@@ -547,7 +580,6 @@ function getFilteredEvents() {
         .sort(sortByPriority);
 }
 
-// Заполнение формы редактирования
 function fillEditForm(event) {
     editingIndex = event.originalIndex;
 
@@ -561,7 +593,6 @@ function fillEditForm(event) {
     modal.classList.remove("hidden");
 }
 
-// Отображение активных событий
 function renderEvents() {
     eventList.innerHTML = "";
 
@@ -571,13 +602,9 @@ function renderEvents() {
         const empty = document.createElement("p");
         empty.className = "empty";
 
-        if (hasActiveFilters()) {
-            empty.textContent =
-                "По заданным фильтрам мероприятий не найдено.";
-        } else {
-            empty.textContent =
-                "На этот день активных событий пока нет.";
-        }
+        empty.textContent = hasActiveFilters()
+            ? "По заданным фильтрам мероприятий не найдено."
+            : "На этот день активных событий пока нет.";
 
         eventList.append(empty);
         return;
@@ -642,12 +669,10 @@ function renderEvents() {
     });
 }
 
-// Поиск и фильтры
 searchEvents.addEventListener("input", renderEvents);
 filterDate.addEventListener("change", renderEvents);
 filterCategory.addEventListener("change", renderEvents);
 
-// Сброс фильтров
 resetFilters.addEventListener("click", () => {
     searchEvents.value = "";
     filterDate.value = "";
@@ -656,7 +681,10 @@ resetFilters.addEventListener("click", () => {
     renderEvents();
 });
 
-// Отображение выполненных событий
+// ==========================================
+// ВЫПОЛНЕННЫЕ СОБЫТИЯ
+// ==========================================
+
 function renderCompleted() {
     completedList.innerHTML = "";
 
@@ -728,7 +756,10 @@ function renderCompleted() {
     });
 }
 
-// Статистика
+// ==========================================
+// СТАТИСТИКА
+// ==========================================
+
 function renderStatistics() {
     const total = events.length;
 
@@ -791,7 +822,6 @@ function renderStatistics() {
     renderActivityChart(completedDates);
 }
 
-// Диаграмма за последние 7 дней
 function renderActivityChart(completedDates) {
     const chart = document.getElementById("activityChart");
     chart.innerHTML = "";
@@ -856,7 +886,10 @@ function renderActivityChart(completedDates) {
     });
 }
 
-// Отображение напоминаний
+// ==========================================
+// НАПОМИНАНИЯ
+// ==========================================
+
 function renderReminders() {
     remindersList.innerHTML = "";
 
@@ -905,7 +938,10 @@ function renderReminders() {
     });
 }
 
-// Обновление всех разделов
+// ==========================================
+// ОБНОВЛЕНИЕ РАЗДЕЛОВ
+// ==========================================
+
 function renderAll() {
     renderCalendar();
     renderCompleted();
@@ -916,7 +952,10 @@ function renderAll() {
     }
 }
 
-// Создание события
+// ==========================================
+// ДОБАВЛЕНИЕ СОБЫТИЙ
+// ==========================================
+
 function addEvent(
     title,
     date,
@@ -946,7 +985,10 @@ function addEvent(
     renderAll();
 }
 
-// Распознавание даты
+// ==========================================
+// БЫСТРОЕ ДОБАВЛЕНИЕ
+// ==========================================
+
 function parseSmartDate(text) {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
@@ -983,7 +1025,6 @@ function parseSmartDate(text) {
     return dateKey(date);
 }
 
-// Распознавание события
 function parseSmartEvent(text) {
     const date = parseSmartDate(text);
     const timeMatch = text.match(/(\d{1,2}):(\d{2})/);
@@ -1020,7 +1061,6 @@ function parseSmartEvent(text) {
     };
 }
 
-// Быстрое добавление
 quickAdd.addEventListener("click", async () => {
     const text = quickInput.value.trim();
 
@@ -1047,7 +1087,10 @@ quickAdd.addEventListener("click", async () => {
     quickInput.value = "";
 });
 
-// Открытие окна создания
+// ==========================================
+// МОДАЛЬНОЕ ОКНО
+// ==========================================
+
 function openEventModal() {
     editingIndex = null;
 
@@ -1063,7 +1106,6 @@ function openEventModal() {
     eventTitle.focus();
 }
 
-// Закрытие окна
 function closeEventModal() {
     modal.classList.add("hidden");
     editingIndex = null;
@@ -1078,7 +1120,6 @@ modal.addEventListener("click", event => {
     }
 });
 
-// Сохранение и редактирование
 saveEvent.addEventListener("click", async () => {
     const title = eventTitle.value.trim();
     const date = eventDate.value;
@@ -1128,19 +1169,24 @@ saveEvent.addEventListener("click", async () => {
     closeEventModal();
 });
 
-// Предыдущая неделя
+// ==========================================
+// ПЕРЕКЛЮЧЕНИЕ НЕДЕЛЬ
+// ==========================================
+
 document.getElementById("prevWeek").addEventListener("click", () => {
     currentDate.setDate(currentDate.getDate() - 7);
     renderCalendar();
 });
 
-// Следующая неделя
 document.getElementById("nextWeek").addEventListener("click", () => {
     currentDate.setDate(currentDate.getDate() + 7);
     renderCalendar();
 });
 
-// Проверка напоминаний
+// ==========================================
+// ПРОВЕРКА НАПОМИНАНИЙ
+// ==========================================
+
 function checkReminders() {
     if (!("Notification" in window)) return;
     if (Notification.permission !== "granted") return;
@@ -1177,10 +1223,98 @@ function checkReminders() {
     if (changed) saveEvents();
 }
 
-// Проверка каждые 15 секунд
 setInterval(checkReminders, 15000);
 
-// Сегодняшняя дата
+// ==========================================
+// ПЕРЕКЛЮЧЕНИЕ ТЕМЫ
+// ==========================================
+
+function getCurrentTheme() {
+    if (window.planifyTheme &&
+        typeof window.planifyTheme.get === "function") {
+        return window.planifyTheme.get();
+    }
+
+    return localStorage.getItem("planifyTheme") || "dark";
+}
+
+function updateThemeButtons() {
+    const currentTheme = getCurrentTheme();
+
+    document.querySelectorAll("[data-theme-choice]").forEach(button => {
+        const selected = button.dataset.themeChoice === currentTheme;
+
+        button.setAttribute("aria-pressed", String(selected));
+        button.classList.toggle("active", selected);
+    });
+}
+
+async function selectTheme(theme) {
+    if (theme !== "light" && theme !== "dark") {
+        return;
+    }
+
+    const status = document.getElementById("themeSaveStatus");
+
+    // Сначала сразу применяем тему
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("planifyTheme", theme);
+
+    updateThemeButtons();
+
+    if (status) {
+        status.textContent = "Сохраняем настройки...";
+    }
+
+    try {
+        if (window.planifyTheme &&
+            typeof window.planifyTheme.save === "function") {
+            await window.planifyTheme.save(theme);
+        } else {
+            const response = await fetch("/api/preferences", {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ theme })
+            });
+
+            if (!response.ok) {
+                throw new Error("Ошибка сохранения темы");
+            }
+        }
+
+        if (status) {
+            status.textContent = "Настройки сохранены";
+        }
+    } catch (error) {
+        console.error("Ошибка сохранения темы:", error);
+
+        if (status) {
+            status.textContent =
+                "Тема применена, но не удалось сохранить её в аккаунте";
+        }
+    }
+
+    updateThemeButtons();
+}
+
+document.querySelectorAll("[data-theme-choice]").forEach(button => {
+    button.addEventListener("click", () => {
+        selectTheme(button.dataset.themeChoice);
+    });
+});
+
+document.addEventListener("planify:theme-loaded", updateThemeButtons);
+document.addEventListener("planify:theme-changed", updateThemeButtons);
+
+document.addEventListener("DOMContentLoaded", updateThemeButtons);
+
+// ==========================================
+// ЗАПУСК
+// ==========================================
+
 todayLabel.textContent = new Date().toLocaleDateString(
     "ru-RU",
     {
@@ -1190,6 +1324,6 @@ todayLabel.textContent = new Date().toLocaleDateString(
     }
 );
 
-// Запуск
 renderAll();
 checkReminders();
+updateThemeButtons();
